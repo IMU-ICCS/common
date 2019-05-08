@@ -21,8 +21,6 @@ import javax.inject.Named;
 import org.cloudiator.messages.Node.NodeDeleteMessage;
 import org.cloudiator.messages.Node.NodeDeleteResponseMessage;
 import org.cloudiator.messages.Node.NodeEvent;
-import org.cloudiator.messages.Node.NodeGroupQueryMessage;
-import org.cloudiator.messages.Node.NodeGroupQueryResponse;
 import org.cloudiator.messages.Node.NodeQueryMessage;
 import org.cloudiator.messages.Node.NodeQueryResponse;
 import org.cloudiator.messages.Node.NodeRequestMessage;
@@ -46,7 +44,7 @@ public class NodeServiceImpl implements NodeService {
   }
 
   @Override
-  public NodeRequestResponse createNodes(NodeRequestMessage nodeRequestMessage)
+  public NodeRequestResponse createNode(NodeRequestMessage nodeRequestMessage)
       throws ResponseException {
     return messageInterface.call(nodeRequestMessage, NodeRequestResponse.class, timeout);
   }
@@ -63,15 +61,9 @@ public class NodeServiceImpl implements NodeService {
   }
 
   @Override
-  public void createNodesAsync(NodeRequestMessage nodeRequestMessage,
+  public void createNodeAsync(NodeRequestMessage nodeRequestMessage,
       ResponseCallback<NodeRequestResponse> callback) {
     messageInterface.callAsync(nodeRequestMessage, NodeRequestResponse.class, callback);
-  }
-
-  @Override
-  public NodeGroupQueryResponse queryNodeGroups(NodeGroupQueryMessage nodeGroupQueryMessage)
-      throws ResponseException {
-    return messageInterface.call(nodeGroupQueryMessage, NodeGroupQueryResponse.class, timeout);
   }
 
   @Override

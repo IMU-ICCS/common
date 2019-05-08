@@ -10,8 +10,8 @@ import org.jgrapht.GraphPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StateMachineImpl<O extends Stateful> implements StateMachine<O>,
-    ErrorAwareStateMachine<O> {
+public class StateMachineImpl<O extends Stateful<S>, S extends State> implements StateMachine<O, S>,
+    ErrorAwareStateMachine<O, S> {
 
   private static final String TRANSITION_NOT_FOUND = "Fatal error. Could not find transition from state %s to state %s.";
 
@@ -19,44 +19,44 @@ public class StateMachineImpl<O extends Stateful> implements StateMachine<O>,
   private static final Logger LOGGER =
       LoggerFactory.getLogger(StateMachineImpl.class);
 
-  private final Set<StateMachineHook<O>> hooks;
-  private final TransitionGraph<O> transitionGraph;
+  private final Set<StateMachineHook<O, S>> hooks;
+  private final TransitionGraph<O, S> transitionGraph;
   @Nullable
-  private final ErrorTransition<O> errorTransition;
+  private final ErrorTransition<O, S> errorTransition;
 
 
   public StateMachineImpl(
-      Set<Transition<O>> transitions,
-      Set<StateMachineHook<O>> hooks,
-      @Nullable ErrorTransition<O> errorTransition) {
+      Set<Transition<O, S>> transitions,
+      Set<StateMachineHook<O, S>> hooks,
+      @Nullable ErrorTransition<O, S> errorTransition) {
     this.hooks = hooks;
     transitionGraph = TransitionGraph.of(transitions);
     this.errorTransition = errorTransition;
   }
 
-  private void preStateTransition(O object, State to) {
+  private void preStateTransition(O object, S to) {
 
     LOGGER.debug(
         String.format("Calling pre Transition hooks for object %s to state %s.", object, to));
 
-    for (StateMachineHook<O> hook : hooks) {
+    for (StateMachineHook<O, S> hook : hooks) {
       hook.pre(object, to);
     }
   }
 
-  private void postStateTransition(O object, State from) {
+  private void postStateTransition(O object, S from) {
 
     LOGGER.debug(
         String.format("Calling post Transition hooks for object %s from state %s.", object,
             from));
 
-    for (StateMachineHook<O> hook : hooks) {
+    for (StateMachineHook<O, S> hook : hooks) {
       hook.post(from, object);
     }
   }
 
   @Override
-  public O apply(O object, State to, Object[] arguments) throws ExecutionException {
+  public O apply(O object, S to, Object[] arguments) {
 
     if (object.state().equals(to)) {
       LOGGER.info(
@@ -74,18 +74,17 @@ public class StateMachineImpl<O extends Stateful> implements StateMachine<O>,
 
   }
 
-  private GraphPath<State, Transition<O>> calculatePath(State from, State to)
-      throws ExecutionException {
+  private GraphPath<S, Transition<O, S>> calculatePath(S from, S to) {
 
     //calculate the shortest path
-    final Optional<GraphPath<State, Transition<O>>> path = transitionGraph
+    final Optional<GraphPath<S, Transition<O, S>>> path = transitionGraph
         .shortestPath(from, to);
 
     if (!path.isPresent()) {
       final String errorMessage = String.format(
           TRANSITION_NOT_FOUND,
           from, to);
-      throw new ExecutionException(new IllegalStateException(errorMessage));
+      throw new IllegalStateException(errorMessage);
     }
 
     LOGGER
@@ -98,10 +97,10 @@ public class StateMachineImpl<O extends Stateful> implements StateMachine<O>,
   }
 
 
-  private O traverse(O object, Object[] arguments, Transition<O> transition)
+  private O traverse(O object, Object[] arguments, Transition<O, S> transition)
       throws ExecutionException {
 
-    final State previousState = object.state();
+    final S previousState = object.state();
 
     //call pre hooks
     preStateTransition(object, transition.to());
@@ -125,29 +124,36 @@ public class StateMachineImpl<O extends Stateful> implements StateMachine<O>,
 
   private O error(O object, Object[] arguments, @Nullable Throwable t) {
 
-    final State previousState = object.state();
+    final S previousState = object.state();
 
     checkState(errorTransition != null, "Can not fail as no error transition is set.");
 
     preStateTransition(object, errorTransition.errorState());
 
-    final O changedObject = errorTransition.apply(object, arguments, t);
+    O changedObject;
+    try {
+      changedObject = errorTransition.apply(object, arguments, t);
+    } catch (Exception e) {
+      LOGGER.error(
+          "Could not execute error transition to state %s for object %s. Object will remain in illegal state.");
+      throw new IllegalStateException(e.getMessage(), e);
+    }
 
     checkState(changedObject.state().equals(errorTransition.errorState()), String
         .format("Transition expected object %s to be in error state %s. But object is in state %s.",
             object, errorTransition.errorState(), object.state()));
 
-    postStateTransition(object, previousState);
+    postStateTransition(changedObject, previousState);
 
     return changedObject;
   }
 
-  private O normal(O object, State to, Object[] arguments) throws ExecutionException {
+  private O normal(O object, S to, Object[] arguments) {
 
-    final GraphPath<State, Transition<O>> graphPath = calculatePath(object.state(),
+    final GraphPath<S, Transition<O, S>> graphPath = calculatePath(object.state(),
         to);
 
-    for (Transition<O> transition : graphPath.getEdgeList()) {
+    for (Transition<O, S> transition : graphPath.getEdgeList()) {
 
       try {
         object = traverse(object, arguments, transition);
@@ -155,13 +161,19 @@ public class StateMachineImpl<O extends Stateful> implements StateMachine<O>,
         if (errorTransition != null) {
           LOGGER.warn(String.format(
               "Error while traversing from state %s to state %s for object %s. Starting transition to error state %s.",
-              object.state(), to, object, errorTransition.errorState()));
-          fail(object, arguments, e);
+              object.state(), to, object, errorTransition.errorState()), e);
+          fail(object, arguments, e.getCause());
         } else {
-          throw new ExecutionException(String
+          throw new IllegalStateException(String
               .format("Error while traversing from state %s to state %s for object %s.",
                   object.state(), to, object), e.getCause());
         }
+      } catch (Exception e) {
+        LOGGER.error(String.format(
+            "Unexpected exception while traversing from state %s to state %s for object %s. Object will remain in illegal state.",
+            object.state(), to
+            , object), e);
+        throw new IllegalStateException(e.getMessage(), e);
       }
     }
 

@@ -1,6 +1,7 @@
 package org.cloudiator.messaging.services;
 
 import com.google.inject.Inject;
+import javax.annotation.Nullable;
 import javax.inject.Named;
 import org.cloudiator.messages.Process;
 import org.cloudiator.messages.Process.CreateFaasProcessRequest;
@@ -17,12 +18,13 @@ import org.cloudiator.messages.Process.LanceProcessDeletedResponse;
 import org.cloudiator.messages.Process.ProcessCreatedResponse;
 import org.cloudiator.messages.Process.ProcessDeletedResponse;
 import org.cloudiator.messages.Process.ProcessEvent;
-import org.cloudiator.messages.Process.ProcessGroupQueryMessage;
-import org.cloudiator.messages.Process.ProcessGroupQueryResponse;
 import org.cloudiator.messages.Process.ProcessQueryRequest;
 import org.cloudiator.messages.Process.ProcessQueryResponse;
+import org.cloudiator.messages.Process.ProcessStatusQuery;
+import org.cloudiator.messages.Process.ProcessStatusResponse;
 import org.cloudiator.messages.Process.ScheduleCreatedResponse;
 import org.cloudiator.messages.Process.ScheduleDeleteResponse;
+import org.cloudiator.messages.Process.ScheduleEvent;
 import org.cloudiator.messages.Process.ScheduleGraphRequest;
 import org.cloudiator.messages.Process.ScheduleGraphResponse;
 import org.cloudiator.messages.Process.ScheduleQueryRequest;
@@ -213,28 +215,36 @@ public class ProcessServiceImpl implements ProcessService {
   }
 
   @Override
-  public ProcessGroupQueryResponse queryProcessGroups(
-      ProcessGroupQueryMessage processGroupQueryMessage) throws ResponseException {
-    return messageInterface
-        .call(processGroupQueryMessage, ProcessGroupQueryResponse.class, timeout);
-  }
-
-  @Override
-  public void subscribeProcessGroupQueryRequest(
-      MessageCallback<ProcessGroupQueryMessage> callback) {
-    messageInterface
-        .subscribe(ProcessGroupQueryMessage.class, ProcessGroupQueryMessage.parser(), callback);
-  }
-
-  @Override
   public void announceProcessEvent(ProcessEvent processEvent) {
     messageInterface.publish(processEvent);
+  }
+
+  @Override
+  public void subscribeProcessEvent(MessageCallback<ProcessEvent> callback) {
+    messageInterface.subscribe(ProcessEvent.class, ProcessEvent.parser(), callback);
   }
 
   @Override
   public ScheduleGraphResponse graph(ScheduleGraphRequest scheduleGraphRequest)
       throws ResponseException {
     return messageInterface.call(scheduleGraphRequest, ScheduleGraphResponse.class, timeout);
+  }
+
+  @Override
+  public ProcessStatusResponse queryProcessStatus(ProcessStatusQuery processStatusQuery,
+      @Nullable Long timeout)
+      throws ResponseException {
+
+    if (timeout == null) {
+      timeout = this.timeout;
+    }
+
+    return messageInterface.call(processStatusQuery, ProcessStatusResponse.class, timeout);
+  }
+
+  @Override
+  public void announceScheduleEvent(ScheduleEvent scheduleEvent) {
+    messageInterface.publish(scheduleEvent);
   }
 
 

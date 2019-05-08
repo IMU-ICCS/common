@@ -4,6 +4,8 @@ package application;
 
 option java_package = "org.cloudiator.messages.entities";
 
+import "commonEntities.proto";
+
 
 message Monitor {
   string id = 1;
@@ -11,7 +13,7 @@ message Monitor {
   repeated MonitoringTarget target = 3;
   Sensor sensor = 4;
   repeated Sink datasink = 5;
-  repeated MonitoringTag tags = 6;
+  map<string, string> tags = 6;
 }
 
 
@@ -20,7 +22,7 @@ message NewMonitor {
   repeated MonitoringTarget target = 2;
   Sensor sensor = 3;
   repeated Sink datasink = 4;
-  repeated MonitoringTag tags = 5;
+  map<string, string> tags = 5;
 }
 
 enum TargetType {
@@ -43,24 +45,10 @@ message Sensor {
   }
 }
 
-enum Unit {
-  DAYS = 0;
-  HOURS = 1;
-  MINUTES = 2;
-  SECONDS = 3;
-  MILLISECONDS = 4;
-  MICROSECONDS = 5;
-  NANOSECONDS = 6;
-}
-message Interval {
-  Unit unit = 1;
-  int64 period = 2;
-}
-
 message PullSensor {
   string className = 1;
   map<string, string> configuration = 2;
-  Interval interval = 3;
+  common.Interval interval = 3;
 }
 
 message PushSensor {
@@ -71,7 +59,7 @@ enum SinkType {
   KAIROS_DB = 0;
   INFLUX = 1;
   CLI = 2;
-  JMS =3;
+  JMS = 3;
 }
 
 message Sink {

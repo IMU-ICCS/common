@@ -1,9 +1,9 @@
 package de.uniulm.omi.cloudiator.util.stateMachine;
 
-public interface StateMachineHook<O> {
+public interface StateMachineHook<O extends Stateful<S>, S extends State> {
 
-  void pre(O object, State to);
+  void pre(O object, S to);
 
-  void post(State from, O object);
+  void post(S from, O object);
 
 }

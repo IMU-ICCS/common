@@ -27,14 +27,12 @@ message NodeDeleteResponseMessage {
 message NodeRequestMessage {
   string userId = 1;
   string groupName = 2;
-  oneof request {
-    NodeRequirements requirements = 3;
-    NodeCandidate nodeCandidate = 4;
-  }
+  NodeCandidate nodeCandidate = 3;
+  string reason = 4;
 }
 
 message NodeRequestResponse {
-  NodeGroup nodeGroup = 1;
+  Node node = 1;
 }
 
 message NodeQueryMessage {
@@ -44,13 +42,4 @@ message NodeQueryMessage {
 
 message NodeQueryResponse {
   repeated Node nodes = 1;
-}
-
-message NodeGroupQueryMessage {
-  string userId = 1;
-  string nodeGroupId = 2;
-}
-
-message NodeGroupQueryResponse {
-  repeated NodeGroup nodeGroups = 1;
 }

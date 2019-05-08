@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.MoreObjects;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -30,15 +31,17 @@ import javax.annotation.Nullable;
 public class OperatingSystemVersionImpl
     implements Comparable<OperatingSystemVersion>, OperatingSystemVersion {
 
-  public static final int UNKNOWN_VERSION = -1;
-  private final int version;
+  private static final int NULL_VERSION = -1;
+
+  @Nullable
+  private final Integer version;
   @Nullable
   private final String name;
   private final Set<String> alternativeNames;
 
-  OperatingSystemVersionImpl(int version, @Nullable String name, Set<String> alternativeNames) {
-    checkArgument((version > 0) || (version == UNKNOWN_VERSION),
-        "Version must be greater than 0 or equal UNKNOWN_VERSION");
+  OperatingSystemVersionImpl(@Nullable Integer version, @Nullable String name, Set<String> alternativeNames) {
+    checkArgument(version == null || version > 0,
+        "Version must be greater than 0 or null");
     this.version = version;
     this.name = name;
     checkNotNull(alternativeNames);
@@ -53,15 +56,13 @@ public class OperatingSystemVersionImpl
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-
     OperatingSystemVersionImpl that = (OperatingSystemVersionImpl) o;
-
-    return version == that.version;
+    return Objects.equals(version, that.version);
   }
 
   @Override
   public int hashCode() {
-    return version;
+    return Objects.hash(version);
   }
 
   @Override
@@ -71,20 +72,31 @@ public class OperatingSystemVersionImpl
   }
 
   @Override
-  public int compareTo(OperatingSystemVersion operatingSystemVersion) {
-    checkNotNull(operatingSystemVersion);
-    return Integer.valueOf(version).compareTo(operatingSystemVersion.version());
-  }
-
-  @Override
   public Optional<String> name() {
     return Optional.ofNullable(name);
   }
 
   @Override
-  public int version() {
+  public Integer version() {
+    return version;
+  }
+
+  @Override
+  public int asInt() {
+    if (this.version == null) {
+      return NULL_VERSION;
+    }
     return version;
   }
 
 
+  @Override
+  public int compareTo(OperatingSystemVersion operatingSystemVersion) {
+    return Integer.compare(this.asInt(), operatingSystemVersion.asInt());
+  }
+
+  @Override
+  public Set<String> getAlternativeNames() {
+    return alternativeNames;
+  }
 }

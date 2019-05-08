@@ -19,8 +19,6 @@ package org.cloudiator.messaging.services;
 import org.cloudiator.messages.Node.NodeDeleteMessage;
 import org.cloudiator.messages.Node.NodeDeleteResponseMessage;
 import org.cloudiator.messages.Node.NodeEvent;
-import org.cloudiator.messages.Node.NodeGroupQueryMessage;
-import org.cloudiator.messages.Node.NodeGroupQueryResponse;
 import org.cloudiator.messages.Node.NodeQueryMessage;
 import org.cloudiator.messages.Node.NodeQueryResponse;
 import org.cloudiator.messages.Node.NodeRequestMessage;
@@ -31,18 +29,15 @@ import org.cloudiator.messaging.ResponseException;
 
 public interface NodeService {
 
-  NodeRequestResponse createNodes(NodeRequestMessage nodeRequestMessage) throws ResponseException;
+  NodeRequestResponse createNode(NodeRequestMessage nodeRequestMessage) throws ResponseException;
 
   NodeQueryResponse queryNodes(NodeQueryMessage nodeQueryMessage) throws ResponseException;
 
   void deleteNodeAsync(NodeDeleteMessage nodeDeleteMessage,
       ResponseCallback<NodeDeleteResponseMessage> callback);
 
-  void createNodesAsync(NodeRequestMessage nodeRequestMessage,
+  void createNodeAsync(NodeRequestMessage nodeRequestMessage,
       ResponseCallback<NodeRequestResponse> callback);
-
-  NodeGroupQueryResponse queryNodeGroups(NodeGroupQueryMessage nodeGroupQueryMessage)
-      throws ResponseException;
 
   void subscribeNodeEvents(MessageCallback<NodeEvent> callback);
 

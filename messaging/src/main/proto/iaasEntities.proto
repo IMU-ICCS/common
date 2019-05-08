@@ -23,6 +23,7 @@ message Cloud {
   CloudType cloudType = 6;
   CloudState state = 7;
   string diagnostic = 8;
+  string userId = 9;
 }
 
 enum CloudState {
@@ -59,6 +60,8 @@ message HardwareFlavor {
   int64 ram = 5;
   double disk = 6;
   Location location = 7;
+  DiscoveryItemState state = 8;
+  string userId = 9;
 }
 
 message Image {
@@ -67,6 +70,8 @@ message Image {
   string providerId = 3;
   common.OperatingSystem operationSystem = 4;
   Location location = 5;
+  DiscoveryItemState state = 6;
+  string userId = 7;
 }
 
 message Location {
@@ -77,6 +82,8 @@ message Location {
   bool isAssignable = 5;
   Location parent = 6;
   GeoLocation geoLocation = 7;
+  DiscoveryItemState state = 8;
+  string userId = 9;
 }
 
 message GeoLocation {
@@ -129,5 +136,26 @@ message VirtualMachine {
   HardwareFlavor hardware = 6;
   repeated IpAddress ipAddresses = 7;
   LoginCredential loginCredential = 8;
+  string userId = 9;
+  VirtualMachineState state = 10;
+}
+
+enum VirtualMachineState {
+  VM_STATE_RUNNING = 0;
+  VM_STATE_ERROR = 1;
+}
+
+enum DiscoveryItemState {
+  DISCOVERY_NEW = 0;
+  DISCOVERY_OK = 1;
+  DISCOVERY_REMOTELY_DELETED = 2;
+  DISCOVERY_LOCALLY_DELETED = 3;
+  DISCOVERY_DISABLED = 4;
+  DISCOVERY_DELETED = 5;
+  DISCOVERY_UNKNOWN = 6;
+}
+
+message DiscoveryStatus {
+  map<string, int32> status = 1;
 }
 

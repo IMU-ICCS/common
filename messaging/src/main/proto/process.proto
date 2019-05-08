@@ -15,6 +15,26 @@ message ProcessEvent {
   Process process = 4;
 }
 
+message ScheduleEvent {
+  string userId = 1;
+  ScheduleState from = 2;
+  ScheduleState to = 3;
+  Schedule schedule = 4;
+}
+
+message ProcessStatusQuery {
+  Process process = 1;
+  oneof runsOn {
+    iaas.Node node = 4;
+    Nodes nodes = 5;
+  }
+}
+
+message ProcessStatusResponse {
+  ProcessState state = 2;
+  string information = 3;
+}
+
 message ProcessQueryRequest {
   string userId = 1;
   string processId = 2;
@@ -37,12 +57,12 @@ message ScheduleQueryResponse {
 message CreateProcessRequest {
   string userId = 1;
   ProcessNew process = 2;
+  string reason = 3;
 }
 
 message ProcessCreatedResponse {
-  ProcessGroup processGroup = 1;
+  Process process = 1;
 }
-
 
 message DeleteProcessRequest {
   string userId = 1;
@@ -70,7 +90,10 @@ message LanceProcessCreatedResponse {
 message DeleteLanceProcessRequest {
   string userId = 1;
   string processId = 2;
-  iaas.Node node = 3;
+  string scheduleId = 3;
+  string jobId = 4;
+  string taskId = 5;
+  iaas.Node node = 6;
 }
 
 message LanceProcessDeletedResponse {
@@ -106,15 +129,6 @@ message DeleteScheduleRequest {
 
 message ScheduleDeleteResponse {
 
-}
-
-message ProcessGroupQueryMessage {
-  string userId = 1;
-  string processGroupId = 2;
-}
-
-message ProcessGroupQueryResponse {
-  repeated ProcessGroup processGroups = 1;
 }
 
 message ScheduleGraphRequest {

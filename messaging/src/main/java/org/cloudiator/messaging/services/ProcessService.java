@@ -1,5 +1,6 @@
 package org.cloudiator.messaging.services;
 
+import javax.annotation.Nullable;
 import org.cloudiator.messages.Process.CreateFaasProcessRequest;
 import org.cloudiator.messages.Process.CreateLanceProcessRequest;
 import org.cloudiator.messages.Process.CreateProcessRequest;
@@ -14,12 +15,13 @@ import org.cloudiator.messages.Process.LanceProcessDeletedResponse;
 import org.cloudiator.messages.Process.ProcessCreatedResponse;
 import org.cloudiator.messages.Process.ProcessDeletedResponse;
 import org.cloudiator.messages.Process.ProcessEvent;
-import org.cloudiator.messages.Process.ProcessGroupQueryMessage;
-import org.cloudiator.messages.Process.ProcessGroupQueryResponse;
 import org.cloudiator.messages.Process.ProcessQueryRequest;
 import org.cloudiator.messages.Process.ProcessQueryResponse;
+import org.cloudiator.messages.Process.ProcessStatusQuery;
+import org.cloudiator.messages.Process.ProcessStatusResponse;
 import org.cloudiator.messages.Process.ScheduleCreatedResponse;
 import org.cloudiator.messages.Process.ScheduleDeleteResponse;
+import org.cloudiator.messages.Process.ScheduleEvent;
 import org.cloudiator.messages.Process.ScheduleGraphRequest;
 import org.cloudiator.messages.Process.ScheduleGraphResponse;
 import org.cloudiator.messages.Process.ScheduleQueryRequest;
@@ -101,12 +103,15 @@ public interface ProcessService {
 
   void subscribeSchedule(MessageCallback<CreateScheduleRequest> callback);
 
-  ProcessGroupQueryResponse queryProcessGroups(ProcessGroupQueryMessage processGroupQueryMessage)
-      throws ResponseException;
-
-  void subscribeProcessGroupQueryRequest(MessageCallback<ProcessGroupQueryMessage> callback);
-
   void announceProcessEvent(ProcessEvent processEvent);
 
+  void subscribeProcessEvent(MessageCallback<ProcessEvent> callback);
+
   ScheduleGraphResponse graph(ScheduleGraphRequest scheduleGraphRequest) throws ResponseException;
+
+  ProcessStatusResponse queryProcessStatus(ProcessStatusQuery processStatusQuery,
+      @Nullable Long timeout)
+      throws ResponseException;
+
+  void announceScheduleEvent(ScheduleEvent scheduleEvent);
 }

@@ -31,7 +31,7 @@ import javax.persistence.MappedSuperclass;
 abstract class Model implements Serializable {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.TABLE)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   /**

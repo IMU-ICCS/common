@@ -43,8 +43,6 @@ public class BaseModelRepositoryJpa<T extends Model> implements ModelRepository<
   }
 
   protected EntityManager em() {
-    //todo: replace with correct call to jpaAPI
-    //todo: currently blocked by https://github.com/playframework/playframework/issues/4890
     return entityManager.get();
   }
 
@@ -60,7 +58,7 @@ public class BaseModelRepositoryJpa<T extends Model> implements ModelRepository<
   }
 
   @Override
-  public void save(final T t) {
+  public T save(final T t) {
     checkNotNull(t);
     if (t.getId() == null) {
       this.persist(t);
@@ -69,6 +67,7 @@ public class BaseModelRepositoryJpa<T extends Model> implements ModelRepository<
     }
     this.flush();
     this.refresh(t);
+    return t;
   }
 
   protected T update(final T t) {

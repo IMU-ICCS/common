@@ -8,6 +8,7 @@ import org.cloudiator.messages.entities.Matchmaking.MatchmakingRequest;
 import org.cloudiator.messages.entities.Matchmaking.MatchmakingResponse;
 import org.cloudiator.messages.entities.Matchmaking.NodeCandidateRequestMessage;
 import org.cloudiator.messages.entities.Matchmaking.NodeCandidateRequestResponse;
+import org.cloudiator.messages.entities.Matchmaking.SolutionRequest;
 import org.cloudiator.messaging.MessageInterface;
 import org.cloudiator.messaging.ResponseCallback;
 import org.cloudiator.messaging.ResponseException;
@@ -54,6 +55,12 @@ public class MatchmakingServiceImpl implements MatchmakingService {
   public void requestMatchAsync(MatchmakingRequest matchmakingRequest,
       ResponseCallback<MatchmakingResponse> response) {
     messageInterface.callAsync(matchmakingRequest, MatchmakingResponse.class, response);
+  }
+
+  @Override
+  public MatchmakingResponse retrieveSolution(SolutionRequest solutionRequest)
+      throws ResponseException {
+    return messageInterface.call(solutionRequest, MatchmakingResponse.class, timeout);
   }
 
 }

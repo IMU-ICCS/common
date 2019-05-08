@@ -22,12 +22,6 @@ message Node {
   string originId = 12;
 }
 
-message NodeGroup {
-  string id = 1;
-  repeated Node nodes = 2;
-  string userId = 3;
-}
-
 message NodeProperties {
   string providerId = 1;
   int32 numberOfCores = 2;
@@ -46,11 +40,10 @@ enum NodeType {
 }
 
 enum NodeState {
-  NODE_STATE_CREATED = 0;
-  NODE_STATE_FAILED = 1;
-  NODE_STATE_RUNNING = 2;
-  NODE_STATE_ERROR = 3;
-  NODE_STATE_DELETED = 4;
+  NODE_STATE_PENDING = 0;
+  NODE_STATE_RUNNING = 1;
+  NODE_STATE_ERROR = 2;
+  NODE_STATE_DELETED = 3;
 }
 
 message NodeRequirements {

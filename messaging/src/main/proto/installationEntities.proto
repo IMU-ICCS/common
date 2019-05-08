@@ -16,6 +16,7 @@ enum Tool {
   DLMS_AGENT = 6;
   ALLUXIO_CLIENT = 7;
   EMS_CLIENT = 8;
+  HDFS_DATA = 9;
 }
 
 message Installation {

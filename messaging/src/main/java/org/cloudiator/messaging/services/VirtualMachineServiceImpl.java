@@ -6,6 +6,7 @@ import org.cloudiator.messages.Vm.CreateVirtualMachineRequestMessage;
 import org.cloudiator.messages.Vm.DeleteVirtualMachineRequestMessage;
 import org.cloudiator.messages.Vm.VirtualMachineCreatedResponse;
 import org.cloudiator.messages.Vm.VirtualMachineDeletedResponse;
+import org.cloudiator.messages.Vm.VirtualMachineEvent;
 import org.cloudiator.messaging.MessageInterface;
 import org.cloudiator.messaging.ResponseCallback;
 import org.cloudiator.messaging.ResponseException;
@@ -47,5 +48,10 @@ public class VirtualMachineServiceImpl implements VirtualMachineService {
       ResponseCallback<VirtualMachineDeletedResponse> callback) {
     messageInterface
         .callAsync(virtualMachineRequestMessage, VirtualMachineDeletedResponse.class, callback);
+  }
+
+  @Override
+  public void announceEvent(VirtualMachineEvent virtualMachineEvent) {
+    messageInterface.publish(virtualMachineEvent);
   }
 }

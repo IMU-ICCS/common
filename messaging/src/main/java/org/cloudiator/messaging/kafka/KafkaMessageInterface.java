@@ -361,7 +361,7 @@ class KafkaMessageInterface implements MessageInterface {
           }
         }
         if (!response.isAvailable()) {
-          throw new TimeoutException();
+          throw new TimeoutException(timeout);
         }
       }
       return response.getContentOrThrowException();

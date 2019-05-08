@@ -39,7 +39,18 @@ message UpdateMonitorResponse {
 message DeleteMonitorRequest {
   string userId = 1;
   string metric = 2;
+  MonitoringTarget target = 3;
 }
 
 message DeleteMonitorResponse {
+}
+
+message GetMonitorRequest{
+  string userId = 1;
+  string metric = 2;
+  MonitoringTarget target = 3;
+}
+
+message GetMonitorResponse {
+  Monitor monitor = 1;
 }

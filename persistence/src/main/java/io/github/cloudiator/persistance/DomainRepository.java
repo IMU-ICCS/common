@@ -2,7 +2,7 @@ package io.github.cloudiator.persistance;
 
 public interface DomainRepository<D> {
 
-  void save(D d);
+  D save(D d);
 
   void delete(D d);
 

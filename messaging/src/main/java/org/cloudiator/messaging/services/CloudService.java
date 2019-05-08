@@ -25,6 +25,8 @@ import org.cloudiator.messages.Cloud.CloudUpdatedResponse;
 import org.cloudiator.messages.Cloud.CreateCloudRequest;
 import org.cloudiator.messages.Cloud.DeleteCloudRequest;
 import org.cloudiator.messages.Cloud.UpdateCloudRequest;
+import org.cloudiator.messages.Discovery.DiscoverStatusResponse;
+import org.cloudiator.messages.Discovery.DiscoveryEvent;
 import org.cloudiator.messaging.ResponseException;
 
 /**
@@ -41,5 +43,9 @@ public interface CloudService {
   CloudDeletedResponse deleteCloud(DeleteCloudRequest deleteCloudRequest) throws ResponseException;
 
   void announceEvent(CloudEvent cloudEvent);
-  
+
+  void announceEvent(DiscoveryEvent discoveryEvent);
+
+  DiscoverStatusResponse discoveryStatus() throws ResponseException;
+
 }

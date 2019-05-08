@@ -1,7 +1,7 @@
 package de.uniulm.omi.cloudiator.util.stateMachine;
 
-public interface Stateful {
+public interface Stateful<S extends State> {
 
-  State state();
+  S state();
   
 }

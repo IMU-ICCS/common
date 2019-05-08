@@ -7,48 +7,76 @@ option java_package = "org.cloudiator.messages.entities";
 import "taskEntities.proto";
 import "jobEntities.proto";
 import "nodeEntities.proto";
+import "iaasEntities.proto";
 
 message ProcessNew {
   string schedule = 1;
   string task = 2;
-  string nodeGroup = 3;
+  string taskInterface = 3;
+  oneof runsOn {
+    string node = 4;
+    NodeCluster cluster = 5;
+  }
 }
 
 message Process {
   string id = 1;
-  string schedule = 2;
-  string task = 3;
+  string originId = 2;
+  string schedule = 3;
+  string task = 4;
+  string taskInterface = 5;
   oneof runsOn {
-    string node = 4;
-    string nodeGroup = 5;
+    string node = 6;
+    NodeCluster cluster = 7;
   }
-  ProcessType type = 6;
-  ProcessState state = 7;
-  string userId = 8;
-  string diagnostic = 9;
-  string reason = 10;
+  ProcessType type = 8;
+  ProcessState state = 9;
+  string userId = 10;
+  string diagnostic = 11;
+  string reason = 12;
+  string endpoint = 13;
+  repeated iaas.IpAddress ipAddresses = 14;
 }
 
-
-message ProcessGroup {
-  string id = 1;
-  string scheduleId = 2;
-  string userId = 3;
-  repeated Process process = 4;
+message NodeCluster {
+  repeated string nodes = 1;
 }
 
 message LanceProcess {
   string schedule = 1;
   Job job = 2;
   string task = 3;
-  iaas.Node node = 4;
+  oneof taskInterface {
+    LanceInterface lanceInterface = 4;
+    DockerInterface dockerInterface = 5;
+  }
+  iaas.Node node = 6;
 }
 
 message SparkProcess {
   string schedule = 1;
   Job job = 2;
   string task = 3;
-  iaas.NodeGroup nodeGroup = 4;
+  oneof runsOn {
+    iaas.Node node = 4;
+    Nodes nodes = 5;
+  }
+  SparkInterface sparkInterface = 6;
+}
+
+message HdfsProcess {
+  string schedule = 1;
+  Job job = 2;
+  string task = 3;
+  oneof runsOn {
+    iaas.Node node = 4;
+    Nodes nodes = 5;
+  }
+  HdfsInterface hdfsInterface = 6;
+}
+
+message Nodes {
+  repeated iaas.Node nodes = 1;
 }
 
 message FaasProcess {
@@ -56,6 +84,7 @@ message FaasProcess {
   Job job = 2;
   string task = 3;
   iaas.Node node = 4;
+  FaasInterface faasInterface = 5;
 }
 
 message ScheduleNew {
@@ -69,6 +98,7 @@ message Schedule {
   string Job = 3;
   Instantiation instantiation = 4;
   repeated Process processes = 5;
+  ScheduleState state = 6;
 }
 
 enum Instantiation {
@@ -80,13 +110,22 @@ enum ProcessType {
   LANCE = 0;
   SPARK = 1;
   FAAS = 2;
+  UNKNOWN = 3;
 }
 
 enum ProcessState {
-  PROCESS_STATE_CREATED = 0;
-  PROCESS_STATE_FAILED = 1;
-  PROCESS_STATE_RUNNING = 2;
-  PROCESS_STATE_ERROR = 3;
-  PROCESS_STATE_DELETED = 4;
-  PROCESS_STATE_FINISHED = 5;
+  PROCESS_STATE_PENDING = 0;
+  PROCESS_STATE_RUNNING = 1;
+  PROCESS_STATE_ERROR = 2;
+  PROCESS_STATE_DELETED = 3;
+  PROCESS_STATE_FINISHED = 4;
+}
+
+enum ScheduleState {
+  SCHEDULE_STATE_PENDING = 0;
+  SCHEDULE_STATE_RUNNING = 1;
+  SCHEDULE_STATE_ERROR = 2;
+  SCHEDULE_STATE_RESTORING = 3;
+  SCHEDULE_STATE_DELETED = 4;
+  SCHEDULE_STATE_MANUAL = 5;
 }

@@ -17,6 +17,7 @@
 package de.uniulm.omi.cloudiator.domain;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by daniel on 08.02.17.
@@ -25,5 +26,9 @@ public interface OperatingSystemVersion {
 
   Optional<String> name();
 
-  int version();
+  Integer version();
+
+  int asInt();
+
+  Set<String> getAlternativeNames();
 }

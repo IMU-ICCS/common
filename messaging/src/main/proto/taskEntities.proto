@@ -12,12 +12,25 @@ message Task {
   repeated TaskInterface interfaces = 3;
   repeated common.Requirement requirements = 4;
   common.Optimization optimization = 5;
-  TaskType taskType = 6;
+  oneof behaviour {
+    ServiceBehaviour service = 6;
+    PeriodicBehaviour periodic = 7;
+  }
 }
 
-enum TaskType {
-  BATCH = 0;
-  SERVICE = 1;
+message ServiceBehaviour {
+  bool restart = 1;
+}
+
+message PeriodicBehaviour {
+  common.Interval interval = 1;
+  CollisionHandling collisionHandling = 2;
+}
+
+enum CollisionHandling {
+  CANCEL = 0;
+  PARALLEL = 1;
+  SKIP = 2;
 }
 
 message TaskInterface {
@@ -26,6 +39,7 @@ message TaskInterface {
     LanceInterface lanceInterface = 2;
     SparkInterface sparkInterface = 3;
     FaasInterface faasInterface = 4;
+    HdfsInterface hdfsInterface = 5;
   }
 }
 
@@ -38,7 +52,8 @@ message Port {
 
 message DockerInterface {
   string dockerImage = 1;
-  map<string,string> environment = 2;
+  map<string, string> environment = 2;
+  string portUpdateAction = 3;
 }
 
 enum ContainerType {
@@ -61,7 +76,8 @@ message LanceInterface {
   string stop = 11;
   string postStop = 12;
   string shutdown = 13;
-  ContainerType containerType = 14;
+  string portUpdateAction = 14;
+  ContainerType containerType = 15;
 }
 
 message FaasInterface {
@@ -91,8 +107,7 @@ message PortProvided {
 
 message PortRequired {
   string name = 1;
-  string updateAction = 2;
-  bool isMandatory = 3;
+  bool isMandatory = 2;
 }
 
 message SparkInterface {
@@ -101,4 +116,14 @@ message SparkInterface {
   repeated string arguments = 3;
   map<string, string> sparkArguments = 4;
   map<string, string> sparkConfiguration = 5;
+  ProcessMapping processMapping = 6;
+}
+
+message HdfsInterface {
+  ProcessMapping processMapping = 1;
+}
+
+enum ProcessMapping {
+  SINGLE = 0;
+  CLUSTER = 1;
 }

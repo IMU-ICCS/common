@@ -78,7 +78,11 @@ enum LocationScope {
 message OperatingSystem {
   OperatingSystemFamily operatingSystemFamily = 1;
   OperatingSystemArchitecture operatingSystemArchitecture = 2;
-  int32 operatingSystemVersion = 3;
+  OperatingSystemVersion operatingSystemVersion = 3;
+}
+
+message OperatingSystemVersion {
+  int32 version = 1;
 }
 
 enum OperatingSystemArchitecture {
@@ -124,4 +128,18 @@ enum OperatingSystemFamily {
   CLOUD_LINUX = 24;
   UBUNTU = 25;
   WINDOWS = 26;
+}
+
+enum Unit {
+  DAYS = 0;
+  HOURS = 1;
+  MINUTES = 2;
+  SECONDS = 3;
+  MILLISECONDS = 4;
+  MICROSECONDS = 5;
+  NANOSECONDS = 6;
+}
+message Interval {
+  Unit unit = 1;
+  int64 period = 2;
 }

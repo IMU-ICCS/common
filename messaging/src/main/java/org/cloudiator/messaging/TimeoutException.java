@@ -21,13 +21,13 @@ package org.cloudiator.messaging;
  */
 public class TimeoutException extends ResponseException {
 
-  private final static String defaultMessage = "An internal timeout occurred while waiting for the response";
+  private final static String defaultMessage = "An internal timeout (%s ms) occurred while waiting for the response";
 
   public TimeoutException(String message) {
     super(504, message);
   }
 
-  public TimeoutException() {
-    this(defaultMessage);
+  public TimeoutException(long timeout) {
+    this(String.format(defaultMessage, timeout));
   }
 }

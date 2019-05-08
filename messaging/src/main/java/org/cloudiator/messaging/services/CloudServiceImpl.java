@@ -29,6 +29,9 @@ import org.cloudiator.messages.Cloud.CloudUpdatedResponse;
 import org.cloudiator.messages.Cloud.CreateCloudRequest;
 import org.cloudiator.messages.Cloud.DeleteCloudRequest;
 import org.cloudiator.messages.Cloud.UpdateCloudRequest;
+import org.cloudiator.messages.Discovery.DiscoverStatusResponse;
+import org.cloudiator.messages.Discovery.DiscoveryEvent;
+import org.cloudiator.messages.Discovery.DiscoveryStatusRequest;
 import org.cloudiator.messaging.MessageInterface;
 import org.cloudiator.messaging.ResponseException;
 
@@ -79,5 +82,16 @@ public class CloudServiceImpl implements CloudService {
   @Override
   public void announceEvent(CloudEvent cloudEvent) {
     messageInterface.publish(cloudEvent);
+  }
+
+  @Override
+  public void announceEvent(DiscoveryEvent discoveryEvent) {
+    messageInterface.publish(discoveryEvent);
+  }
+
+  @Override
+  public DiscoverStatusResponse discoveryStatus() throws ResponseException {
+    return messageInterface
+        .call(DiscoveryStatusRequest.newBuilder().build(), DiscoverStatusResponse.class, timeout);
   }
 }

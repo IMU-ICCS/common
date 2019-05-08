@@ -20,6 +20,8 @@ import org.cloudiator.messages.Monitor.CreateMonitorRequest;
 import org.cloudiator.messages.Monitor.CreateMonitorResponse;
 import org.cloudiator.messages.Monitor.DeleteMonitorRequest;
 import org.cloudiator.messages.Monitor.DeleteMonitorResponse;
+import org.cloudiator.messages.Monitor.GetMonitorRequest;
+import org.cloudiator.messages.Monitor.GetMonitorResponse;
 import org.cloudiator.messages.Monitor.MonitorQueryRequest;
 import org.cloudiator.messages.Monitor.MonitorQueryResponse;
 import org.cloudiator.messages.Monitor.UpdateMonitorRequest;
@@ -37,10 +39,12 @@ public interface MonitorService {
   CreateMonitorResponse addMonitor(CreateMonitorRequest createMonitorRequest)
       throws ResponseException;
 
-  UpdateMonitorResponse getMonitor(UpdateMonitorRequest updateMonitorRequest)
+  UpdateMonitorResponse updateMonitor(UpdateMonitorRequest updateMonitorRequest)
       throws ResponseException;
 
   DeleteMonitorResponse deleteMonitor(DeleteMonitorRequest deleteMonitorRequest)
       throws ResponseException;
+
+  GetMonitorResponse getMonitor(GetMonitorRequest getMonitorRequest) throws ResponseException;
 
 }

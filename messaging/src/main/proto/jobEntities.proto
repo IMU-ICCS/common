@@ -17,6 +17,7 @@ message JobNew {
   repeated Task tasks = 2;
   repeated Communication communications = 3;
   repeated common.Requirement requirements = 4;
+  common.Optimization optimization = 5;
 }
 
 message Job {
@@ -26,4 +27,5 @@ message Job {
   repeated Task tasks = 4;
   repeated Communication communications = 5;
   repeated common.Requirement requirements = 6;
+  common.Optimization optimization = 7;
 }

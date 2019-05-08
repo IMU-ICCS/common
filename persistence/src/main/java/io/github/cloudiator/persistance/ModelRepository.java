@@ -30,7 +30,7 @@ interface ModelRepository<T extends Model> {
 
   void delete(T t);
 
-  void save(T t);
+  T save(T t);
 
   List<T> findAll();
 }

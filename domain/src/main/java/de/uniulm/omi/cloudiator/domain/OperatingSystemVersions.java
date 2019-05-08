@@ -27,7 +27,7 @@ public class OperatingSystemVersions {
   }
 
   public static OperatingSystemVersion unknown() {
-    return new OperatingSystemVersionImpl(OperatingSystemVersionImpl.UNKNOWN_VERSION, null,
+    return new OperatingSystemVersionImpl(null, null,
         Collections.emptySet());
   }
 

@@ -196,6 +196,9 @@ class KafkaSubscriptionServiceImpl implements KafkaSubscriptionService {
             }
           }
         }
+      } catch (Throwable t) {
+        LOGGER
+            .error(String.format("Unexpected error during handling of subscription %s.", this), t);
       } finally {
         LOGGER.debug(
             String.format("%s is stopping execution. Stopping consumer %s.", this, consumer));

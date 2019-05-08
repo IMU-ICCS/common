@@ -7,10 +7,19 @@ option java_package = "org.cloudiator.messages.entities";
 import "commonEntities.proto";
 import "iaasEntities.proto";
 
+message Solution {
+  string id = 1;
+  repeated NodeCandidate nodeCandidates = 2;
+  double costs = 3;
+  bool isOptimal = 4;
+  float time = 5;
+  bool isValid = 6;
+}
+
 message NodeCandidate {
   string id = 1;
   NodeCandidateType type = 2;
-  iaas.Cloud cloud = 3;
+  Cloud cloud = 3;
   Location location = 4;
   Image image = 5;
   HardwareFlavor hardwareFlavor = 6;

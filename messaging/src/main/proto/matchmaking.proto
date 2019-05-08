@@ -11,7 +11,8 @@ import "commonEntities.proto";
 
 message NodeCandidateRequestMessage {
   string userId = 1;
-  repeated common.Requirement requirements = 2;
+  string id = 2;
+  repeated common.Requirement requirements = 3;
 }
 
 message NodeCandidateRequestResponse {
@@ -21,9 +22,14 @@ message NodeCandidateRequestResponse {
 message MatchmakingRequest {
   string userId = 1;
   NodeRequirements nodeRequirements = 2;
+  repeated Node existingNodes = 3;
+}
 
+message SolutionRequest {
+  string userId = 1;
+  string solution = 2;
 }
 
 message MatchmakingResponse {
-  repeated NodeCandidate candidates = 1;
+  Solution solution = 1;
 }

@@ -2,26 +2,26 @@ package de.uniulm.omi.cloudiator.util.stateMachine;
 
 import de.uniulm.omi.cloudiator.util.stateMachine.ErrorTransition.ErrorTransitionAction;
 
-public class ErrorTransitionBuilder<O extends Stateful> {
+public class ErrorTransitionBuilder<O extends Stateful<S>, S extends State> {
 
-  private State errorState;
+  private S errorState;
   private ErrorTransitionAction<O> action;
 
   ErrorTransitionBuilder() {
   }
 
-  public ErrorTransitionBuilder<O> errorState(State errorState) {
+  public ErrorTransitionBuilder<O, S> errorState(S errorState) {
     this.errorState = errorState;
     return this;
   }
 
-  public ErrorTransitionBuilder<O> action(ErrorTransitionAction<O> action) {
+  public ErrorTransitionBuilder<O, S> action(ErrorTransitionAction<O> action) {
     this.action = action;
     return this;
   }
 
-  public ErrorTransition<O> build() {
-    return new ErrorTransition<O>(errorState, action);
+  public ErrorTransition<O, S> build() {
+    return new ErrorTransition<>(errorState, action);
   }
 
 }

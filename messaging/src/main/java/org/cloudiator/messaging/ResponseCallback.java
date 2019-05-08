@@ -24,6 +24,15 @@ import org.cloudiator.messages.General.Error;
  */
 public interface ResponseCallback<T> {
 
+  static ResponseCallback<?> empty() {
+    return new ResponseCallback<Object>() {
+      @Override
+      public void accept(@Nullable Object content, @Nullable Error error) {
+        //intentionally left empty
+      }
+    };
+  }
+
   public void accept(@Nullable T content, @Nullable Error error);
 
 }
