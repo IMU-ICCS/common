@@ -1,6 +1,7 @@
 package de.uniulm.omi.cloudiator.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -17,7 +18,7 @@ public class CloudiatorFutures {
   }
 
 
-  public static <T> List<T> waitForFutures(List<Future<T>> futures)
+  public static <T> Collection<T> waitForFutures(Collection<Future<T>> futures)
       throws ExecutionException, InterruptedException {
 
     final int size = futures.size();
@@ -25,10 +26,8 @@ public class CloudiatorFutures {
 
     LOGGER.debug(String.format("Waiting for a total amount of %s futures", size));
 
-    for (int i = 0; i < size; i++) {
-
-      Future<T> future = futures.get(i);
-
+    int i = 1;
+    for (Future<T> future : futures) {
       LOGGER.debug(String
           .format("Waiting for future %s of %s. Number of completed futures: %s", i, size,
               results.size()));

@@ -109,6 +109,15 @@ message SparkProcessCreatedResponse {
   Process process = 2;
 }
 
+message CreateSparkClusterRequest {
+  string userId = 1;
+  Nodes nodes = 2;
+}
+
+message SparkClusterCreatedResponse {
+
+}
+
 message FaasProcessCreatedResponse {
   Process process = 1;
 }
@@ -138,4 +147,15 @@ message ScheduleGraphRequest {
 
 message ScheduleGraphResponse {
   string json = 1;
+}
+
+message ScaleRequest {
+  string userId = 1;
+  string scheduleId = 2;
+  string taskId = 3;
+  NodeCluster nodeCluster = 4;
+}
+
+message ScaleResponse {
+
 }

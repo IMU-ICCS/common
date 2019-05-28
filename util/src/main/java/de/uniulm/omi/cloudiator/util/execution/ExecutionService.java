@@ -19,11 +19,12 @@
  */
 package de.uniulm.omi.cloudiator.util.execution;
 
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public interface ExecutionService {
 
-  void schedule(Schedulable schedulable);
+  ScheduledFuture<?> schedule(Schedulable schedulable);
 
   void execute(Runnable runnable);
 

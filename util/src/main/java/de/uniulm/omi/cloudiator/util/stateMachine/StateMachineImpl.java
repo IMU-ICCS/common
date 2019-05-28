@@ -135,7 +135,9 @@ public class StateMachineImpl<O extends Stateful<S>, S extends State> implements
       changedObject = errorTransition.apply(object, arguments, t);
     } catch (Exception e) {
       LOGGER.error(
-          "Could not execute error transition to state %s for object %s. Object will remain in illegal state.");
+          String.format(
+              "Could not execute error transition to state %s for object %s. Object will remain in illegal state.",
+              errorTransition.errorState(), object));
       throw new IllegalStateException(e.getMessage(), e);
     }
 

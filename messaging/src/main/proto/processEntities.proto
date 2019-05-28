@@ -8,6 +8,7 @@ import "taskEntities.proto";
 import "jobEntities.proto";
 import "nodeEntities.proto";
 import "iaasEntities.proto";
+import "google/protobuf/timestamp.proto";
 
 message ProcessNew {
   string schedule = 1;
@@ -36,6 +37,8 @@ message Process {
   string reason = 12;
   string endpoint = 13;
   repeated iaas.IpAddress ipAddresses = 14;
+  google.protobuf.Timestamp start = 15;
+  google.protobuf.Timestamp stop = 16;
 }
 
 message NodeCluster {
@@ -107,10 +110,11 @@ enum Instantiation {
 }
 
 enum ProcessType {
-  LANCE = 0;
+  UNKNOWN = 0;
   SPARK = 1;
   FAAS = 2;
-  UNKNOWN = 3;
+  SIMULATION = 3;
+  LANCE = 4;
 }
 
 enum ProcessState {

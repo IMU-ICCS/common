@@ -40,6 +40,7 @@ message TaskInterface {
     SparkInterface sparkInterface = 3;
     FaasInterface faasInterface = 4;
     HdfsInterface hdfsInterface = 5;
+    SimulationInterface simulationInterface = 6;
   }
 }
 
@@ -126,4 +127,19 @@ message HdfsInterface {
 enum ProcessMapping {
   SINGLE = 0;
   CLUSTER = 1;
+}
+
+message NormalDistribution {
+  double mean = 1;
+  double stdDev = 2;
+}
+
+message Distribution {
+  oneof distribution {
+    NormalDistribution normalDistribution = 1;
+  }
+}
+
+message SimulationInterface {
+  Distribution startTime = 1;
 }

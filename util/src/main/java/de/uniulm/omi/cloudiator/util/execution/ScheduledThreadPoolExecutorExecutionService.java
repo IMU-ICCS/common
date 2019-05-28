@@ -18,6 +18,7 @@ package de.uniulm.omi.cloudiator.util.execution;
 
 import com.google.common.util.concurrent.MoreExecutors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +38,11 @@ public class ScheduledThreadPoolExecutorExecutionService implements ExecutionSer
   }
 
   @Override
-  public void schedule(Schedulable schedulable) {
+  public ScheduledFuture<?> schedule(Schedulable schedulable) {
     LOGGER.info(String
         .format("%s is scheduling %s with initial delay of %s and period of %s %s", this,
             schedulable, schedulable.delay(), schedulable.period(), schedulable.timeUnit()));
-    this.scheduledExecutorService
+    return this.scheduledExecutorService
         .scheduleAtFixedRate(schedulable, schedulable.delay(), schedulable.period(),
             schedulable.timeUnit());
   }

@@ -8,6 +8,7 @@ import org.cloudiator.messages.Process.CreateFaasProcessRequest;
 import org.cloudiator.messages.Process.CreateLanceProcessRequest;
 import org.cloudiator.messages.Process.CreateProcessRequest;
 import org.cloudiator.messages.Process.CreateScheduleRequest;
+import org.cloudiator.messages.Process.CreateSparkClusterRequest;
 import org.cloudiator.messages.Process.CreateSparkProcessRequest;
 import org.cloudiator.messages.Process.DeleteLanceProcessRequest;
 import org.cloudiator.messages.Process.DeleteProcessRequest;
@@ -22,6 +23,8 @@ import org.cloudiator.messages.Process.ProcessQueryRequest;
 import org.cloudiator.messages.Process.ProcessQueryResponse;
 import org.cloudiator.messages.Process.ProcessStatusQuery;
 import org.cloudiator.messages.Process.ProcessStatusResponse;
+import org.cloudiator.messages.Process.ScaleRequest;
+import org.cloudiator.messages.Process.ScaleResponse;
 import org.cloudiator.messages.Process.ScheduleCreatedResponse;
 import org.cloudiator.messages.Process.ScheduleDeleteResponse;
 import org.cloudiator.messages.Process.ScheduleEvent;
@@ -29,6 +32,7 @@ import org.cloudiator.messages.Process.ScheduleGraphRequest;
 import org.cloudiator.messages.Process.ScheduleGraphResponse;
 import org.cloudiator.messages.Process.ScheduleQueryRequest;
 import org.cloudiator.messages.Process.ScheduleQueryResponse;
+import org.cloudiator.messages.Process.SparkClusterCreatedResponse;
 import org.cloudiator.messages.Process.SparkProcessCreatedResponse;
 import org.cloudiator.messaging.MessageCallback;
 import org.cloudiator.messaging.MessageInterface;
@@ -188,6 +192,29 @@ public class ProcessServiceImpl implements ProcessService {
   }
 
   @Override
+  public SparkClusterCreatedResponse createSparkCluster(
+      CreateSparkClusterRequest createSparkClusterRequest) throws ResponseException {
+    return messageInterface.call(createSparkClusterRequest, SparkClusterCreatedResponse.class,timeout);
+  }
+
+  @Override
+  public void createCreateSparkClusterRequestAsync(
+      CreateSparkClusterRequest createSparkClusterRequest,
+      ResponseCallback<SparkClusterCreatedResponse> callback) {
+
+    messageInterface.callAsync(createSparkClusterRequest, SparkClusterCreatedResponse.class,callback);
+
+  }
+
+  @Override
+  public void subscribeCreateSparkClusterRequest(
+      MessageCallback<CreateSparkClusterRequest> callback) {
+
+    messageInterface.subscribe(CreateSparkClusterRequest.class,CreateSparkClusterRequest.parser(),callback);
+
+  }
+
+  @Override
   public FaasProcessCreatedResponse createFaasProcess(
       Process.CreateFaasProcessRequest createFaasProcessRequest) throws ResponseException {
     return messageInterface
@@ -245,6 +272,24 @@ public class ProcessServiceImpl implements ProcessService {
   @Override
   public void announceScheduleEvent(ScheduleEvent scheduleEvent) {
     messageInterface.publish(scheduleEvent);
+  }
+
+  @Override
+  public ScaleResponse createScale(ScaleRequest scaleRequest) throws ResponseException {
+    return messageInterface.call(scaleRequest, ScaleResponse.class, timeout);
+  }
+
+  @Override
+  public void createScaleRequestAsync(ScaleRequest scaleRequest,
+      ResponseCallback<ScaleResponse> callback) {
+
+    messageInterface.callAsync(scaleRequest, ScaleResponse.class, callback);
+
+  }
+
+  @Override
+  public void subscribeScaleRequest(MessageCallback<ScaleRequest> callback) {
+    messageInterface.subscribe(ScaleRequest.class, ScaleRequest.parser(), callback);
   }
 
 

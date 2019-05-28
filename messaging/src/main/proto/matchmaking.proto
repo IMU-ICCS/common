@@ -23,6 +23,7 @@ message MatchmakingRequest {
   string userId = 1;
   NodeRequirements nodeRequirements = 2;
   repeated Node existingNodes = 3;
+  int32 minimumNodeSize = 4;
 }
 
 message SolutionRequest {
