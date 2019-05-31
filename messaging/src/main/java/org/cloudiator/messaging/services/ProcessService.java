@@ -101,7 +101,7 @@ public interface ProcessService {
   SparkClusterCreatedResponse createSparkCluster(CreateSparkClusterRequest createSparkClusterRequest)
       throws ResponseException;
 
-  void createCreateSparkClusterRequestAsync(CreateSparkClusterRequest createSparkClusterRequest,
+  void createSparkClusterAsync(CreateSparkClusterRequest createSparkClusterRequest,
       ResponseCallback<SparkClusterCreatedResponse> callback);
 
   void subscribeCreateSparkClusterRequest(MessageCallback<CreateSparkClusterRequest> callback);

@@ -194,15 +194,17 @@ public class ProcessServiceImpl implements ProcessService {
   @Override
   public SparkClusterCreatedResponse createSparkCluster(
       CreateSparkClusterRequest createSparkClusterRequest) throws ResponseException {
-    return messageInterface.call(createSparkClusterRequest, SparkClusterCreatedResponse.class,timeout);
+    return messageInterface
+        .call(createSparkClusterRequest, SparkClusterCreatedResponse.class, timeout);
   }
 
   @Override
-  public void createCreateSparkClusterRequestAsync(
+  public void createSparkClusterAsync(
       CreateSparkClusterRequest createSparkClusterRequest,
       ResponseCallback<SparkClusterCreatedResponse> callback) {
 
-    messageInterface.callAsync(createSparkClusterRequest, SparkClusterCreatedResponse.class,callback);
+    messageInterface
+        .callAsync(createSparkClusterRequest, SparkClusterCreatedResponse.class, callback);
 
   }
 
@@ -210,7 +212,8 @@ public class ProcessServiceImpl implements ProcessService {
   public void subscribeCreateSparkClusterRequest(
       MessageCallback<CreateSparkClusterRequest> callback) {
 
-    messageInterface.subscribe(CreateSparkClusterRequest.class,CreateSparkClusterRequest.parser(),callback);
+    messageInterface
+        .subscribe(CreateSparkClusterRequest.class, CreateSparkClusterRequest.parser(), callback);
 
   }
 
